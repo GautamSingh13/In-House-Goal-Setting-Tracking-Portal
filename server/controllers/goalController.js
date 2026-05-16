@@ -162,6 +162,27 @@ const unlockGoal = async (req, res) => {
     }
 }
 
+const deleteGoal = async (req, res) => {
+    try {
+        const goal = await Goal.findById(req.params.id)
+
+        if (!goal) {
+            return res.status(404).json({ message: 'Goal not found' })
+        }
+
+        // sirf draft goals delete ho sakte hain
+        if (goal.isLocked) {
+            return res.status(400).json({ message: 'Locked goal cannot be deleted' })
+        }
+
+        await Goal.findByIdAndDelete(req.params.id)
+        res.json({ message: 'Goal deleted successfully' })
+
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
 module.exports = {
     createGoal,
     submitGoals,
@@ -170,5 +191,6 @@ module.exports = {
     approveGoal,
     returnGoal,
     updateAchievement,
-    unlockGoal
+    unlockGoal,
+    deleteGoal
 }
