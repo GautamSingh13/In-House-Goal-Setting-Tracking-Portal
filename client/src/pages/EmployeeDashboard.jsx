@@ -3,9 +3,11 @@ import Navbar from '../components/Navbar'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
 import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const EmployeeDashboard = () => {
     const { user } = useAuth()
+    const navigate = useNavigate()
     const [goals, setGoals] = useState([])
     const [loading, setLoading] = useState(true)
 
@@ -67,11 +69,13 @@ const EmployeeDashboard = () => {
                         <p className="text-lg mb-1">Quarterly Check-in</p>
                         <p className="opacity-75 text-xs">Log your achievements</p>
                     </Link>
-                    <div className="p-5 rounded-xl text-white font-medium text-sm bg-purple-600">
-                        <p className="text-lg mb-1">My Progress</p>
-                        <p className="opacity-75 text-xs">Track your performance</p>
+                    <div 
+                            onClick={() => navigate('/employee/progress')}
+                            className="p-5 rounded-xl text-white font-medium text-sm bg-purple-600 hover:opacity-90 cursor-pointer">
+                            <p className="text-lg mb-1">My Progress</p>
+                            <p className="opacity-75 text-xs">Track your performance</p>
+                            </div>
                     </div>
-                </div>
 
 
                 <div className="bg-white rounded-xl border border-gray-100 p-6">

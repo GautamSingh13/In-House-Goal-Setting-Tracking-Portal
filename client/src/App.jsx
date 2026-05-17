@@ -9,6 +9,7 @@ import CheckIn from './pages/CheckIn'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import { Toaster } from 'react-hot-toast'
+import Progress from './pages/Progress'
 
 function App() {
   return (
@@ -57,6 +58,12 @@ function App() {
               <Reports />
             </ProtectedRoute>
           } />
+
+          <Route path="/employee/progress" element={
+           <ProtectedRoute allowedRoles={['employee']}>
+            <Progress />
+           </ProtectedRoute>
+           } />
 
         </Routes>
       </BrowserRouter>
