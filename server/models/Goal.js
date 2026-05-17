@@ -62,24 +62,28 @@ const goalSchema = new mongoose.Schema({
     },
 
     achievements: [{
-        quarter: {
-            type: String,
-            enum: ['Q1', 'Q2', 'Q3', 'Q4']
-        },
-        actual: {
-            type: Number,
-            default: 0
-        },
-        status: {
-            type: String,
-            enum: ['not_started', 'on_track', 'completed'],
-            default: 'not_started'
-        },
-        managerComment: {
-            type: String,
-            default: ''
-        }
-    }]
+    quarter: {
+        type: String,
+        enum: ['Q1', 'Q2', 'Q3', 'Q4']
+    },
+    actual: {
+        type: Number,
+        default: 0
+    },
+    status: {
+        type: String,
+        enum: ['not_started', 'on_track', 'completed'],
+        default: 'not_started'
+    },
+    progressScore: {
+        type: Number,
+        default: 0
+    },
+    managerComment: {
+        type: String,
+        default: ''
+    }
+}]
 
 }, {
     timestamps: true
