@@ -22,19 +22,19 @@ const Progress = () => {
         fetchGoals()
     }, [])
     const calculateOverallProgress = () => {
-        if (goals.length === 0) return 0
-        let totalScore = 0
-        let totalAchievements = 0
+    if (goals.length === 0) return 0
+    
+    let totalScore = 0
 
-        goals.forEach(goal => {
-            goal.achievements.forEach(a => {
-                totalScore += a.progressScore || 0
-                totalAchievements++
-            })
-        })
+    goals.forEach(goal => {
+        if (goal.achievements.length > 0) {
+            const latestAchievement = goal.achievements[goal.achievements.length - 1]
+            totalScore += latestAchievement.progressScore || 0
+        }
+    })
 
-        return totalAchievements > 0 ? Math.round(totalScore / totalAchievements) : 0
-    }
+    return Math.round(totalScore / goals.length)
+}
 
     const overallProgress = calculateOverallProgress()
     const completedGoals = goals.filter(g => 
