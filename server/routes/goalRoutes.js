@@ -11,7 +11,8 @@ const {
     returnGoal,
     updateAchievement,
     unlockGoal,
-    deleteGoal
+    deleteGoal,
+    editGoal
 } = require('../controllers/goalController')
 
 
@@ -34,6 +35,8 @@ router.put('/:id/return', protect, authorize('manager', 'admin'), returnGoal)
 
 router.put('/:id/unlock', protect, authorize('admin'), unlockGoal)
 
-router.delete('/:id', protect, authorize('employee'), deleteGoal)
+router.delete('/:id', protect, authorize('employee', 'admin'), deleteGoal)
+
+router.put('/:id/edit', protect, authorize('employee'), editGoal)
 
 module.exports = router

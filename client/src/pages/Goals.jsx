@@ -25,17 +25,27 @@ const Goals = () => {
         fetchGoals()
     }, [])
 
-    const totalWeightage = goals.reduce((sum, g) => sum + g.weightage, 0)
+const totalWeightage = goals.reduce((sum, g) => sum + g.weightage, 0)
+
+const draftGoals = goals.filter(g => g.status === 'draft')
+const approvedGoals = goals.filter(g => g.status === 'approved')
+const draftWeightage = draftGoals.reduce((sum, g) => sum + g.weightage, 0)
+const approvedWeightage = approvedGoals.reduce((sum, g) => sum + g.weightage, 0)
+const submitWeightage = approvedWeightage + draftWeightage 
 
     const handleSubmit = async () => {
-        try {
-            await api.put('/goals/submit')
-            toast.success('Goals submitted for approval!')
-            fetchGoals()
-        } catch (error) {
-            toast.error(error.response?.data?.message || 'Failed to submit goals')
-        }
+    if (submitWeightage !== 100) {
+        toast.error(`Total weightage must be 100%! Current: ${submitWeightage}%`)
+        return
     }
+    try {
+        await api.put('/goals/submit')
+        toast.success('Goals submitted for approval!')
+        fetchGoals()
+    } catch (error) {
+        toast.error(error.response?.data?.message || 'Failed to submit goals')
+    }
+}
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -49,21 +59,38 @@ const Goals = () => {
                         <p className="text-gray-500">Manage your annual goals</p>
                     </div>
                     <div className="flex gap-3">
-                        <button
-                            onClick={() => setShowForm(!showForm)}
-                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-                        >
-                            {showForm ? 'Cancel' : '+ New Goal'}
-                        </button>
-                        {goals.some(g => g.status === 'draft') && (
-                            <button
-                                onClick={handleSubmit}
-                                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-                            >
-                                Submit All Goals
-                            </button>
-                        )}
-                    </div>
+
+            {goals.length < 8 && totalWeightage < 100 ? (
+            <button
+            onClick={() => setShowForm(!showForm)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            >
+            {showForm ? 'Cancel' : '+ New Goal'}
+            </button>
+            ) : (
+            <button
+            onClick={() => {
+                if (goals.length >= 8) {
+                    toast.error('Maximum 8 goals limit reached!')
+                } else {
+                    toast.error('Total weightage is already 100%! Cannot add more goals.')
+                }
+            }}
+            className="bg-gray-400 text-white px-4 py-2 rounded-lg cursor-not-allowed"
+            >
+            + New Goal
+            </button>
+        )}
+
+            {goals.some(g => g.status === 'draft') && totalWeightage === 100 && (
+            <button
+            onClick={handleSubmit}
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+            >
+            Submit All Goals
+            </button>
+        )}
+        </div>
                 </div>
 
                 <div className="bg-white rounded-xl shadow-sm p-4 mb-6">

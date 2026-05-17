@@ -125,21 +125,53 @@ const GoalForm = ({ onGoalCreated }) => {
                             required
                         />
                     </div>
-
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Weightage (%)</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                             Weightage (%)
+                        </label>
                         <input
-                            type="number"
-                            name="weightage"
-                            value={formData.weightage}
-                            onChange={handleChange}
-                            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Min 10%"
-                            min={10}
-                            max={100}
-                            required
+                                            type="number"
+                        name="weightage"
+                        value={formData.weightage}
+                        onChange={(e) => {
+                        const val = e.target.value
+
+                        if (Number(val) > 100) {
+                        toast.error('Weightage cannot exceed 100%, please enter a valid value!')
+                        setFormData({ ...formData, weightage: '' })
+                        return
+                        }
+
+                        setFormData({ ...formData, weightage: val })
+                        }}
+                        onBlur={(e) => {
+                        const val = e.target.value
+
+                        if (val === '') return
+
+                        if (val.includes('.')) {
+                        toast.error('Weightage should be a whole number, float values are not valid!')
+                        setFormData({ ...formData, weightage: '' })
+                        return
+                        }
+
+                        if (Number(val) < 10) {
+                        toast.error('Weightage should be Atleast 10%, please enter a valid value!')
+                        setFormData({ ...formData, weightage: '' })
+                        return
+                        }
+                            }}
+                        className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Min 10%, whole numbers only"
+                        min={10}
+                        max={100}
+                         step={1}
+                        required
                         />
-                    </div>
+                        <p className="text-xs text-gray-400 mt-1">
+                         Enter whole numbers only — e.g. 10, 25, 40 (No decimals like 33.3)
+                        </p>
+                        </div>
                 </div>
 
                 <button
