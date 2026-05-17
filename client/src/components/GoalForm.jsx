@@ -178,7 +178,7 @@ const GoalForm = ({ onGoalCreated }) => {
                     type="submit"
                     disabled={loading}
                     className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
-                >
+                 >
                     {loading ? 'Creating...' : 'Create Goal'}
                 </button>
 
