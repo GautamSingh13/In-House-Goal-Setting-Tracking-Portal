@@ -62,15 +62,6 @@ const Login = () => {
                     </button>
                 </form>
 
-                <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                    <p className="text-xs font-medium text-gray-500 mb-2">Test Credentials</p>
-                    <div className="space-y-1">
-                        <p className="text-xs text-gray-400">Admin: admin@atomquest.com / admin123</p>
-                        <p className="text-xs text-gray-400">Manager: manager@atomquest.com / manager123</p>
-                        <p className="text-xs text-gray-400">Employee: employee@atomquest.com / employee123</p>
-                    </div>
-                </div>
-
             </div>
         </div>
     )
