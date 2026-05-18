@@ -23,31 +23,39 @@ const Reports = () => {
     }, [])
 
     const exportCSV = () => {
-        const headers = ['Employee', 'Title', 'Thrust Area', 'UoM', 'Target', 'Weightage', 'Status']
-        
-        const rows = goals.map(goal => [
-            goal.employee?.name || 'N/A',
-            goal.title,
-            goal.thrustArea,
-            goal.uom,
-            goal.target,
-            goal.weightage + '%',
-            goal.status
-        ])
+    const headers = [
+        'Employee', 'Title', 'Thrust Area', 
+        'UoM', 'Target (Planned)', 'Weightage', 
+        'Status', 'Q1 Actual', 'Q2 Actual', 
+        'Q3 Actual', 'Q4 Actual'
+    ]
 
-        const csvContent = [headers, ...rows]
-            .map(row => row.join(','))
-            .join('\n')
+    const rows = goals.map(goal => [
+        goal.employee?.name || 'N/A',
+        goal.title,
+        goal.thrustArea,
+        goal.uom,
+        goal.target,
+        goal.weightage + '%',
+        goal.status,
+        goal.achievements?.find(a => a.quarter === 'Q1')?.actual || '-',
+        goal.achievements?.find(a => a.quarter === 'Q2')?.actual || '-',
+        goal.achievements?.find(a => a.quarter === 'Q3')?.actual || '-',
+        goal.achievements?.find(a => a.quarter === 'Q4')?.actual || '-',
+    ])
 
-        const blob = new Blob([csvContent], { type: 'text/csv' })
-        const url = URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = 'atomquest-goals-report.csv'
-        a.click()
+    const csvContent = [headers, ...rows]
+        .map(row => row.join(','))
+        .join('\n')
 
-        toast.success('Report downloaded!')
-    }
+    const blob = new Blob([csvContent], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'atomquest-goals-report.csv'
+    a.click()
+    toast.success('Report downloaded!')
+}
 
     const totalGoals = goals.length
     const approvedGoals = goals.filter(g => g.status === 'approved').length
@@ -108,43 +116,43 @@ const Reports = () => {
                     {loading ? (
                         <p className="text-gray-500 p-6">Loading...</p>
                     ) : (
-                        <table className="w-full">
-                            <thead className="bg-gray-50">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Employee</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Goal</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Thrust Area</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Weightage</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200">
-                                {goals.map(goal => (
-                                    <tr key={goal._id} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 text-sm text-gray-800">
-                                            {goal.employee?.name || 'N/A'}
-                                        </td>
-                                        <td className="px-6 py-4 text-sm font-medium text-gray-800">
-                                            {goal.title}
-                                        </td>
-                                        <td className="px-6 py-4 text-sm text-gray-500">
-                                            {goal.thrustArea}
-                                        </td>
-                                        <td className="px-6 py-4 text-sm text-gray-500">
-                                            {goal.weightage}%
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                                                goal.status === 'approved' ? 'bg-green-100 text-green-700' :
-                                                goal.status === 'submitted' ? 'bg-yellow-100 text-yellow-700' :
-                                                goal.status === 'returned' ? 'bg-red-100 text-red-700' :
-                                                'bg-gray-100 text-gray-700'
-                                            }`}>
-                                                {goal.status}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
+               <table className="w-full">
+                   <thead className="bg-gray-50">
+                       <tr>
+                           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Employee</th>
+                           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Goal</th>
+                           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Thrust Area</th>
+                           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Weightage</th>
+                           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                       </tr>
+                   </thead>
+                 <tbody className="divide-y divide-gray-200">
+                     {goals.map(goal => (
+                         <tr key={goal._id} className="hover:bg-gray-50">
+                             <td className="px-6 py-4 text-sm text-gray-800">
+                                 {goal.employee?.name || 'N/A'}
+                             </td>
+                             <td className="px-6 py-4 text-sm font-medium text-gray-800">
+                         {goal.title}
+                             </td>
+                             <td className="px-6 py-4 text-sm text-gray-500">
+                                 {goal.thrustArea}
+                             </td>
+                             <td className="px-6 py-4 text-sm text-gray-500">
+                                 {goal.weightage}%
+                             </td>
+                             <td className="px-6 py-4">
+                                 <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                             goal.status === 'approved' ? 'bg-green-100 text-green-700' :
+                             goal.status === 'submitted' ? 'bg-yellow-100 text-yellow-700' :
+                             goal.status === 'returned' ? 'bg-red-100 text-red-700' :
+                             'bg-gray-100 text-gray-700'
+                                }`}>
+                             {goal.status}
+                           </span>
+                            </td>
+                          </tr>
+                      ))}
                             </tbody>
                         </table>
                     )}

@@ -309,8 +309,7 @@ const editGoal = async (req, res) => {
 const getCompletionStats = async (req, res) => {
     try {
         const goals = await Goal.find().populate('employee', 'name email')
-
-
+        
         const employeeMap = {}
         goals.forEach(goal => {
             if (!goal.employee) return
