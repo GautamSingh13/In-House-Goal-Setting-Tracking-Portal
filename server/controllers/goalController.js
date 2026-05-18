@@ -115,19 +115,32 @@ const managerEditGoal = async (req, res) => {
             return res.status(400).json({ message: 'Only submitted goals can be edited by manager' })
         }
 
-        const { target, weightage, description } = req.body
+        if (req.body.weightage) {
+            const otherGoals = await Goal.find({
+                employee: goal.employee,
+                _id: { $ne: goal._id }
+            })
+            const otherWeightage = otherGoals.reduce((sum, g) => sum + g.weightage, 0)
+            const total = otherWeightage + Number(req.body.weightage)
+
+            if (total > 100) {
+                return res.status(400).json({
+                    message: `Total weightage exceeds 100%! Other goals: ${otherWeightage}%, This goal: ${req.body.weightage}%. Adjust accordingly.`
+                })
+            }
+        }
 
         await AuditLog.create({
             goal: goal._id,
             changedBy: req.user._id,
             action: 'Manager Edited Goal',
             previousValue: `Target: ${goal.target}, Weightage: ${goal.weightage}%`,
-            newValue: `Target: ${target || goal.target}, Weightage: ${weightage || goal.weightage}%`
+            newValue: `Target: ${req.body.target || goal.target}, Weightage: ${req.body.weightage || goal.weightage}%`
         })
 
-        if (target) goal.target = target
-        if (weightage) goal.weightage = weightage
-        if (description) goal.description = description
+        if (req.body.target) goal.target = req.body.target
+        if (req.body.weightage) goal.weightage = req.body.weightage
+        if (req.body.description) goal.description = req.body.description
         await goal.save()
         res.json({ message: 'Goal updated by manager', goal })
     } catch (error) {

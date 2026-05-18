@@ -176,6 +176,20 @@ const ManagerDashboard = () => {
                                                             min={10}
                                                             max={100}
                                                         />
+                                                        {editData.weightage && (() => {
+                                                         const otherWeightage = goals
+                                                             .filter(g => g.employee?._id === goal.employee?._id && g._id !== goal._id)
+                                                             .reduce((sum, g) => sum + g.weightage, 0)
+                                                         const total = otherWeightage + Number(editData.weightage)
+                                                         return (
+                                                             <p className={`text-xs mt-1 font-medium ${total > 100 ? 'text-red-500' : total === 100 ? 'text-green-600' : 'text-yellow-600'}`}>
+                                                                 Total weightage: {total}% / 100%
+                                                                 {total > 100 && ' — Exceeds limit!'}
+                                                                 {total === 100 && ' — Perfect!'}
+                                                                 {total < 100 && ' — Adjust other goals too'}
+                                                             </p>
+                                                         )
+    }                                                 )()}
                                                     </div>
                                                     <div>
                                                         <label className="text-xs text-gray-400">Description</label>
