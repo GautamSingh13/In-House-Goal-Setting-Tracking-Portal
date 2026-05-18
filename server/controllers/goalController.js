@@ -249,6 +249,16 @@ const deleteGoal = async (req, res) => {
                 return res.status(400).json({ message: 'You can only delete your draft goals' })
             }
         }
+        
+        if (req.user.role === 'admin') {
+            await AuditLog.create({
+                goal: goal._id,
+                changedBy: req.user._id,
+                action: 'Goal Deleted by Admin',
+                previousValue: goal.status,
+                newValue: 'deleted'
+            })
+        }
         await Goal.findByIdAndDelete(req.params.id)
         res.json({ message: 'Goal deleted successfully' })
     } catch (error) {
