@@ -200,10 +200,4 @@ Entire infrastructure runs on **free tiers**:
 
 ---
 
-## 📝 Note
-
-Shared Goals feature was planned but could not be implemented within the 48-hour hackathon timeframe. All other Phase 1 and Phase 2 requirements are fully functional.
-
----
-
-*Built with ❤️ by Gautam Singh for AtomQuest Hackathon 1.0 — May 2026*
+*Built by Gautam Singh for AtomQuest Hackathon 1.0 — May 2026*
