@@ -62,6 +62,16 @@ const Reports = () => {
     const submittedGoals = goals.filter(g => g.status === 'submitted').length
     const completionRate = totalGoals > 0 ? Math.round((approvedGoals / totalGoals) * 100) : 0
 
+    const goalsWithProgress = goals.filter(g => g.achievements && g.achievements.length > 0)
+    const avgProgress = goalsWithProgress.length > 0
+    ? Math.round(
+        goalsWithProgress.reduce((sum, g) => {
+            const latest = g.achievements[g.achievements.length - 1]
+            return sum + (latest.progressScore || 0)
+        }, 0) / goalsWithProgress.length
+      )
+    : 0
+
     return (
         <div className="min-h-screen bg-gray-100">
             <Navbar />
@@ -93,21 +103,21 @@ const Reports = () => {
                         <p className="text-3xl font-bold text-yellow-600">{submittedGoals}</p>
                     </div>
                     <div className="bg-white p-6 rounded-xl shadow-sm">
-                        <p className="text-sm text-gray-500">Completion Rate</p>
-                        <p className="text-3xl font-bold text-purple-600">{completionRate}%</p>
+                    <p className="text-sm text-gray-500">Avg. Achievement Progress</p>
+                    <p className="text-3xl font-bold text-purple-600">{avgProgress}%</p>
                     </div>
                 </div>
                 <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-                    <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm font-medium text-gray-700">Overall Completion</p>
-                        <p className="text-sm font-bold text-green-600">{completionRate}%</p>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-4">
-                        <div
-                            className="h-4 rounded-full bg-green-500"
-                            style={{ width: `${completionRate}%` }}
-                        />
-                    </div>
+                     <div className="flex justify-between items-center mb-2">
+                     <p className="text-sm font-medium text-gray-700">Overall Achievement Progress</p>
+                     <p className="text-sm font-bold text-green-600">{avgProgress}%</p>
+                     </div>
+                     <div className="w-full bg-gray-200 rounded-full h-4">
+                     <div
+                     className="h-4 rounded-full bg-green-500"
+                     style={{ width: `${avgProgress}%` }}
+                     />
+                     </div>
                 </div>
                 <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                     <div className="px-6 py-4 border-b border-gray-200">
