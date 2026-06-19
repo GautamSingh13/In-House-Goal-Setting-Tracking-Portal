@@ -45,15 +45,21 @@ const submitGoals = async (req, res) => {
         if (draftGoals.length === 0) {
             return res.status(400).json({ message: 'No goals to submit' })
         }
+
         const approvedGoals = await Goal.find({ employee: req.user._id, status: 'approved' })
+        const submittedGoals = await Goal.find({ employee: req.user._id, status: 'submitted' })
+
         const approvedWeightage = approvedGoals.reduce((sum, g) => sum + g.weightage, 0)
+        const submittedWeightage = submittedGoals.reduce((sum, g) => sum + g.weightage, 0)
         const draftWeightage = draftGoals.reduce((sum, g) => sum + g.weightage, 0)
-        const totalWeightage = approvedWeightage + draftWeightage
+        const totalWeightage = approvedWeightage + submittedWeightage + draftWeightage
+
         if (Math.round(totalWeightage) !== 100) {
             return res.status(400).json({
-                message: `Total weightage must be 100%. Current: ${totalWeightage}%`
+                message: `Total weightage must be 100%. Current: ${totalWeightage}% (Approved: ${approvedWeightage}%, Pending review: ${submittedWeightage}%, Draft: ${draftWeightage}%)`
             })
         }
+
         await Goal.updateMany(
             { employee: req.user._id, status: 'draft' },
             { status: 'submitted' }
@@ -116,19 +122,20 @@ const managerEditGoal = async (req, res) => {
         }
 
         if (req.body.weightage) {
-            const otherGoals = await Goal.find({
-                employee: goal.employee,
-                _id: { $ne: goal._id }
-            })
-            const otherWeightage = otherGoals.reduce((sum, g) => sum + g.weightage, 0)
-            const total = otherWeightage + Number(req.body.weightage)
-
-            if (total > 100) {
-                return res.status(400).json({
-                    message: `Total weightage exceeds 100%! Other goals: ${otherWeightage}%, This goal: ${req.body.weightage}%. Adjust accordingly.`
-                })
-            }
-        }
+           const otherGoals = await Goal.find({
+               employee: goal.employee,
+               _id: { $ne: goal._id },
+               status: { $ne: 'returned' }
+           })
+           const otherWeightage = otherGoals.reduce((sum, g) => sum + g.weightage, 0)
+           const total = otherWeightage + Number(req.body.weightage)
+       
+           if (total > 100) {
+               return res.status(400).json({
+                   message: `Total weightage exceeds 100%! Other active goals: ${otherWeightage}%, This goal: ${req.body.weightage}%. Adjust accordingly.`
+               })
+           }
+       }
 
         await AuditLog.create({
             goal: goal._id,

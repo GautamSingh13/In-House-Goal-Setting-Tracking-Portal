@@ -29,9 +29,13 @@ const totalWeightage = goals.reduce((sum, g) => sum + g.weightage, 0)
 
 const draftGoals = goals.filter(g => g.status === 'draft')
 const approvedGoals = goals.filter(g => g.status === 'approved')
+const submittedGoals = goals.filter(g => g.status === 'submitted')
+
 const draftWeightage = draftGoals.reduce((sum, g) => sum + g.weightage, 0)
 const approvedWeightage = approvedGoals.reduce((sum, g) => sum + g.weightage, 0)
-const submitWeightage = approvedWeightage + draftWeightage 
+const submittedWeightage = submittedGoals.reduce((sum, g) => sum + g.weightage, 0)
+
+const submitWeightage = approvedWeightage + submittedWeightage + draftWeightage
 
     const handleSubmit = async () => {
     if (submitWeightage !== 100) {
@@ -96,15 +100,15 @@ const submitWeightage = approvedWeightage + draftWeightage
                 <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
                     <div className="flex justify-between items-center mb-2">
                         <p className="text-sm font-medium text-gray-700">Total Weightage</p>
-                        <p className={`text-sm font-bold ${totalWeightage === 100 ? 'text-green-600' : 'text-red-600'}`}>
-                            {totalWeightage}% / 100%
+                        <p className={`text-sm font-bold ${submitWeightage === 100 ? 'text-green-600' : 'text-red-600'}`}>
+                        {submitWeightage}% / 100%
                         </p>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-3">
                         <div
-                            className={`h-3 rounded-full ${totalWeightage === 100 ? 'bg-green-500' : totalWeightage > 100 ? 'bg-red-500' : 'bg-blue-500'}`}
-                            style={{ width: `${Math.min(totalWeightage, 100)}%` }}
-                        />
+                         className={`h-3 rounded-full ${submitWeightage === 100 ? 'bg-green-500' : submitWeightage > 100 ? 'bg-red-500' : 'bg-blue-500'}`}
+                         style={{ width: `${Math.min(submitWeightage, 100)}%` }}
+                         />
                     </div>
                     {totalWeightage !== 100 && (
                         <p className="text-xs text-red-500 mt-1">
