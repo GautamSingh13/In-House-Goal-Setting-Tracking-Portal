@@ -29,7 +29,7 @@ const Navbar = () => {
 
             {/* Logo */}
             <div className="text-xl font-bold tracking-tight">
-                AtomQuest
+             Goal Tracking Portal
             </div>
 
             <div className="flex gap-6 items-center">

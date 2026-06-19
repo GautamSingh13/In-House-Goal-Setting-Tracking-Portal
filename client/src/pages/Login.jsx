@@ -38,8 +38,8 @@ const handleDemoLogin = async (role) => {
             <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 w-full max-w-md">
 
                 <div className="mb-8">
-                    <h1 className="text-2xl font-bold" style={{ color: 'var(--primary)' }}>AtomQuest</h1>
-                    <p className="text-gray-400 text-sm mt-1">Goal Setting & Tracking Portal</p>
+                    <h1 className="text-2xl font-bold" style={{ color: 'var(--primary)' }}>Goal Setting & Tracking Portal</h1>
+                    <p className="text-gray-400 text-sm mt-1">Plan, track, and review goals across your team</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
