@@ -17,6 +17,22 @@ const Login = () => {
         if (redirectPath) navigate(redirectPath)
     }
 
+const handleDemoLogin = async (role) => {
+    const demoCredentials = {
+        employee: { email: 'employee@atomquest.com', password: 'employee123' },
+        manager: { email: 'manager@atomquest.com', password: 'manager123' },
+        admin: { email: 'admin@atomquest.com', password: 'admin123' }
+    }
+
+    const { email, password } = demoCredentials[role]
+    setEmail(email)
+    setPassword(password)
+    setLoading(true)
+    const redirectPath = await login(email, password)
+    setLoading(false)
+    if (redirectPath) navigate(redirectPath)
+}
+
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
             <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 w-full max-w-md">
@@ -61,6 +77,34 @@ const Login = () => {
                         {loading ? 'Signing in...' : 'Sign In'}
                     </button>
                 </form>
+
+                
+        <div className="mt-6">
+            <p className="text-xs font-medium text-gray-500 mb-2 text-center">Quick Demo Access</p>
+            <div className="grid grid-cols-3 gap-2">
+                <button
+                    onClick={() => handleDemoLogin('employee')}
+                    disabled={loading}
+                    className="text-xs py-2 rounded-lg border border-gray-200 hover:bg-gray-50 font-medium text-gray-700 disabled:opacity-50"
+                >
+                    Employee
+                </button>
+                <button
+            onClick={() => handleDemoLogin('manager')}
+            disabled={loading}
+            className="text-xs py-2 rounded-lg border border-gray-200 hover:bg-gray-50 font-medium text-gray-700 disabled:opacity-50"
+        >
+            Manager
+                </button>
+                <button
+            onClick={() => handleDemoLogin('admin')}
+            disabled={loading}
+            className="text-xs py-2 rounded-lg border border-gray-200 hover:bg-gray-50 font-medium text-gray-700 disabled:opacity-50"
+        >
+            Admin
+                </button>
+            </div>
+         </div>
 
             </div>
         </div>
