@@ -42,6 +42,10 @@ A full-stack MERN web application for managing employee goals, quarterly check-i
 
 ---
 
+## 🛡️ Data Integrity & Security Layer
+- Strict Request Validation: Custom Express middleware intercepts all goal mutation requests (create, inline-edit, submit). It calculates the total profile weightage server-side, completely throwing back a 400 Bad Request error if a user attempts to save or approve a portfolio that deviates from exactly 100%.
+- Route Protection: Custom authMiddleware verifies JWT tokens and parses user roles, preventing unauthorized cross-role API calls.
+
 ## 👥 User Roles
 
 ### Employee
@@ -71,7 +75,7 @@ A full-stack MERN web application for managing employee goals, quarterly check-i
 
 ### Phase 1 — Goal Creation & Approval
 - Goal creation with Thrust Area, Title, UoM (Numeric, %, Timeline, Zero-based), Target, Weightage
-- Validation: max 8 goals, min 10% weightage per goal, total must equal 100%
+- Validation: max 8 goals, min 10% weightage per goal, total must equal 100% (fiercely enforced via frontend UI state checks and ironclad server-side validation     middleware to block direct API tampering via Postman)
 - Manager L1 approval workflow: approve, inline edit, or return with comment
 - Goals locked on approval — no edits without Admin intervention
 - Goal editing allowed for draft and returned goals
@@ -146,9 +150,9 @@ atomquest/
 
 | UoM Type | Formula |
 |---|---|
-| Numeric / % | min(round(Actual / Target × 100), 100) |
+| Numeric / % | min(round(Actual / Target * 100), 100) |
 | Zero-based | Actual = 0 → 100%, else 0% |
-| Timeline | Actual ≤ Target → 100%, else 0% |
+| Timeline | Actual <= Target → 100%, else 0% |
 
 ---
 
